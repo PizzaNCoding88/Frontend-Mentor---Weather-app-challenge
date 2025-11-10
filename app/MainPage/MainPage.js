@@ -1,4 +1,5 @@
 import React from "react";
+import SearchBox from "../components/SearchBox";
 import { ChevronDown } from "lucide-react";
 import { Settings } from "lucide-react";
 import { Sun } from "lucide-react";
@@ -21,6 +22,9 @@ const MainPage = () => {
         <h1 className="text-5xl font-semibold">
           How&apos;s the sky looking today?
         </h1>
+      </div>
+      <div>
+        <SearchBox />
       </div>
     </div>
   );
