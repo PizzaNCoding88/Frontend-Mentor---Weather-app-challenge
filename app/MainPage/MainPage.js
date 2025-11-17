@@ -1,10 +1,22 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import SearchBox from "../components/SearchBox";
 import { ChevronDown } from "lucide-react";
 import { Settings } from "lucide-react";
 import { Sun } from "lucide-react";
 
 const MainPage = () => {
+  const [weather, setWeather] = useState("");
+  const [location, setLocation] = useState("");
+  const [country, setCountry] = useState("");
+
+  const handleWeatherData = ({ place, country, weather }) => {
+    setWeather(weather);
+    setLocation(place);
+    setCountry(country);
+    console.log(weather, location, country);
+  };
+
   return (
     <div className="mx-8 font-bricolage pt-3">
       <div className="flex items-center justify-between">
@@ -24,7 +36,28 @@ const MainPage = () => {
         </h1>
       </div>
       <div>
-        <SearchBox />
+        <SearchBox onWeatherFetched={handleWeatherData} />
+      </div>
+      <div className="text-center bg-purple mt-8 rounded-3xl p-8 flex flex-col gap-3 bg-[url('../public/assets/images/bg-today-small.svg')] bg-cover py-14">
+        <p className="font-bold text-xl">
+          {location}, {country}
+        </p>
+        <p className="font-extralight text-sm">
+          {weather.current?.time
+            ? new Date(weather.current.time).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : ""}
+        </p>
+        <div className="flex justify-between px-10 items-center">
+          <p>Icon</p>
+          <p className="text-7xl font-semibold">
+            {Math.trunc(weather.current.temperature_2m)}&deg;
+          </p>
+        </div>
       </div>
     </div>
   );

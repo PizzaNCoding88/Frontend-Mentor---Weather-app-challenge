@@ -1,20 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Search } from "lucide-react";
 
-const SearchBox = () => {
+const SearchBox = ({ onWeatherFetched }) => {
   const [query, setQuery] = useState("");
-  const [textLocation, setTextLocation] = useState("");
-  const [weather, setWeather] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setTextLocation(query);
-    setQuery("");
-    const { latitude, longitude } = await getCoordinates(query);
-    const weatherData = await getWeather(latitude, longitude);
-    setWeather(weatherData);
-    console.log(weatherData);
+    if (!query.trim()) return;
+
+    try {
+      const { latitude, longitude, country } = await getCoordinates(query);
+      const weatherData = await getWeather(latitude, longitude);
+
+      onWeatherFetched({ place: query, country, weather: weatherData });
+
+      setQuery("");
+    } catch (err) {
+      console.error("Error fetching weather:", err);
+    }
   };
 
   async function getCoordinates(location) {
@@ -23,34 +27,25 @@ const SearchBox = () => {
     )}&count=1&language=en&format=json`;
 
     const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Geocoding API failed: ${res.status}`);
-    }
-
+    if (!res.ok) throw new Error(`Geocoding API failed: ${res.status}`);
     const data = await res.json();
 
-    if (!data.results || data.results.length === 0) {
+    if (!data.results || data.results.length === 0)
       throw new Error("Location not found");
-    }
 
-    const latitude = data.results[0].latitude;
-    const longitude = data.results[0].longitude;
-
-    return { latitude, longitude };
+    return {
+      latitude: data.results[0].latitude,
+      longitude: data.results[0].longitude,
+      country: data.results[0].country,
+    };
   }
 
   async function getWeather(latitude, longitude) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&timezone=auto`;
 
     const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Weather API failed: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error(`Weather API failed: ${res.status}`);
+    return await res.json();
   }
 
   return (
