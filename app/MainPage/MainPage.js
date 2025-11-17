@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import SearchBox from "../components/SearchBox";
+import WeatherIcon from "../components/WeatherCodeMapping/WeatherIcon";
 import { ChevronDown } from "lucide-react";
 import { Settings } from "lucide-react";
 import { Sun } from "lucide-react";
 
 const MainPage = () => {
-  const [weather, setWeather] = useState("");
+  const [weather, setWeather] = useState({});
   const [location, setLocation] = useState("");
   const [country, setCountry] = useState("");
 
@@ -52,12 +53,16 @@ const MainPage = () => {
               })
             : ""}
         </p>
-        <div className="flex justify-between px-10 items-center">
-          <p>Icon</p>
-          <p className="text-7xl font-semibold">
-            {Math.trunc(weather.current.temperature_2m)}&deg;
-          </p>
-        </div>
+        {weather.current && (
+          <div className="flex justify-between px-10 items-center">
+            {weather.current && (
+              <WeatherIcon weatherCode={weather.current.weather_code} />
+            )}
+            <p className="text-7xl font-semibold">
+              {Math.trunc(weather.current.temperature_2m)}&deg;
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
