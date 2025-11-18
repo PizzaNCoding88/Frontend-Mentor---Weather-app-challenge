@@ -64,6 +64,38 @@ const MainPage = () => {
           </div>
         )}
       </div>
+      <div className="grid grid-cols-2 grid-rows-2 gap-4 py-6 font-dmsans">
+        <div className="flex flex-col gap-2 py-8 px-6 bg-grey rounded-2xl ">
+          <p className="text-md font-extralight">Feels Like</p>
+          <p className="text-2xl">
+            {Math.round(weather.current.apparent_temperature)}&deg;
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 py-8 px-6 bg-grey rounded-2xl ">
+          <p className="text-md font-extralight">Humidity</p>
+          <p className="text-2xl">{weather.current.relative_humidity_2m}%</p>
+        </div>
+        <div className="flex flex-col gap-2 py-8 px-6 bg-grey rounded-2xl ">
+          <p className="text-md font-extralight">Wind</p>
+          <p className="text-2xl">
+            {weather.current.wind_speed_10m}
+            {weather.current_units.wind_speed_10m}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 py-8 px-6 bg-grey rounded-2xl ">
+          <p className="text-md font-extralight">Precipitation</p>
+          <p className="text-2xl">
+            {weather.current.precipitation}
+            {weather.current_units.precipitation}
+          </p>
+        </div>
+      </div>
+      <div>
+        <h2 className="font-dmsans">Daily Forecast</h2>
+        <div>
+          <div className=""></div>
+        </div>
+      </div>
     </div>
   );
 };
